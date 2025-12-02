@@ -1,0 +1,26 @@
+User/Product,Basque Burnt Cheesecake,Caramel Macchiato,Chicken Alfredo,Chocolate Mouse,Cloud Biscoff,Cloud Strawberry,Croissant,Egg & Bacon Sandwich,Egg & Bacono,Ham & Cheese,Kaffi Mocha,Okinawa,Pancake,S'mores,Signature Chocolate,Sweet Iced Americano,Vanilla Latte
+capuyan.e.bsinfotech@gmail.com,1,1,1,1,1,0,0,0,1,0,1,1,1,1,1,1,1
+defiler30@gmail.com,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1
+ecapuyan9@gmail.com,1,1,0,1,1,1,1,1,0,1,0,0,0,0,0,1,1
+capuyan.e.bsinfotech@gmail.com,1,1,1,1,1,0,0,0,1,0,1,1,1,1,1,1,1
+defiler30@gmail.com,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1
+ecapuyan9@gmail.com,1,1,0,1,1,1,1,1,0,1,0,0,0,0,0,1,1
+
+Product/User,capuyan.e.bsinfotech@gmail.com,defiler30@gmail.com,ecapuyan9@gmail.com
+Basque Burnt Cheesecake,1,0,1
+Caramel Macchiato,1,0,1
+Chicken Alfredo,1,0,0
+Chocolate Mouse,1,0,1
+Cloud Biscoff,1,0,1
+Cloud Strawberry,0,0,1
+Croissant,0,0,1
+Egg & Bacon Sandwich,0,0,1
+Egg & Bacono,1,0,0
+Ham & Cheese,0,0,1
+Kaffi Mocha,1,0,0
+Okinawa,1,0,0
+Pancake,1,0,0
+S'mores,1,0,0
+Signature Chocolate,1,0,0
+Sweet Iced Americano,1,0,1
+Vanilla Latte,1,1,1
