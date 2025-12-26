@@ -1,3 +1,5 @@
+import 'package:kaffi_cafe/services/voucher_service.dart';
+import 'package:kaffi_cafe/models/voucher_model.dart';
 import 'package:flutter/material.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:kaffi_cafe/utils/colors.dart';
@@ -18,17 +20,11 @@ class RewardScreen extends StatefulWidget {
 class _RewardScreenState extends State<RewardScreen> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final VoucherService _voucherService = VoucherService();
 
   // Vouchers will be generated based on points conversion: 100 points = 10 PHP
   final box = GetStorage();
 
-  // Define voucher options
-  final List<Map<String, dynamic>> voucherOptions = [
-    {'points': 100, 'value': 10, 'description': '₱10 Voucher'},
-    {'points': 200, 'value': 20, 'description': '₱20 Voucher'},
-    {'points': 500, 'value': 50, 'description': '₱50 Voucher'},
-    {'points': 1000, 'value': 100, 'description': '₱100 Voucher'},
-  ];
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<DocumentSnapshot>(
@@ -135,27 +131,55 @@ class _RewardScreenState extends State<RewardScreen> {
               const SizedBox(height: 16),
 
               // Voucher Options
-              Column(
-                children: voucherOptions.map((voucher) {
-                  return Padding(
-                    padding: const EdgeInsets.only(bottom: 12),
-                    child: _buildVoucherCard(
-                      description: voucher['description'],
-                      pointsCost: voucher['points'],
-                      value: voucher['value'],
-                      userPoints: userPoints,
-                      user: box.read('userData')?['email'] ??
-                          box.read('user')?['email'],
-                    ),
+              StreamBuilder<List<Voucher>>(
+                stream: _voucherService.getActiveVouchers(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(child: CircularProgressIndicator());
+                  }
+                  if (snapshot.hasError) {
+                    print("Error fetching vouchers: ${snapshot.error}"); // Debug print
+                    return Center(child: Text('Error: ${snapshot.error}'));
+                  }
+                  final vouchers = snapshot.data ?? [];
+                  print("Fetched ${vouchers.length} vouchers from Firestore"); // Debug print
+                  
+                  if (vouchers.isEmpty) {
+                     return Padding(
+                       padding: const EdgeInsets.all(16.0),
+                       child: Text('No vouchers available at the moment.'),
+                     );
+                  }
+                  
+                  // Get the current user identifier (Email) securely
+                  final currentUserEmail = box.read('userData')?['email'] ?? 
+                                         box.read('user')?['email'] ?? 
+                                         _auth.currentUser?.email;
+
+                  if (currentUserEmail == null || currentUserEmail.isEmpty) {
+                     return Center(child: Text("Please log in to see vouchers."));
+                  }
+
+                  return Column(
+                    children: vouchers.map((voucher) {
+                      return Padding(
+                        padding: const EdgeInsets.only(bottom: 12),
+                        child: _buildVoucherCard(
+                          voucher: voucher,
+                          userPoints: userPoints,
+                          user: currentUserEmail, // Pass the confirmed email
+                        ),
+                      );
+                    }).toList(),
                   );
-                }).toList(),
+                },
               ),
 
               const SizedBox(height: 24),
 
               // Redemption History
               TextWidget(
-                text: 'Voucher Redemption History',
+                text: 'My Claimed Vouchers',
                 fontSize: 22,
                 color: textBlack,
                 fontFamily: 'Bold',
@@ -163,15 +187,10 @@ class _RewardScreenState extends State<RewardScreen> {
 
               const SizedBox(height: 16),
 
-              StreamBuilder<QuerySnapshot>(
-                stream: _firestore
-                    .collection('voucher_redemptions')
-                    .where('userId',
-                        isEqualTo: box.read('userData')?['email'] ??
-                            box.read('user')?['email'])
-                    .orderBy('timestamp', descending: true)
-                    .limit(10)
-                    .snapshots(),
+              StreamBuilder<List<Voucher>>(
+                // Use getUserClaimedVouchers to fetch active vouchers
+                stream: _voucherService.getUserClaimedVouchers(
+                    box.read('userData')?['email'] ?? box.read('user')?['email'] ?? ''),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return const Center(child: CircularProgressIndicator());
@@ -179,8 +198,8 @@ class _RewardScreenState extends State<RewardScreen> {
                   if (snapshot.hasError) {
                     return Center(child: Text('Error: ${snapshot.error}'));
                   }
-                  final redemptions = snapshot.data?.docs ?? [];
-                  if (redemptions.isEmpty) {
+                  final claimedVouchers = snapshot.data ?? [];
+                  if (claimedVouchers.isEmpty) {
                     return Container(
                       padding: const EdgeInsets.all(20),
                       decoration: BoxDecoration(
@@ -189,7 +208,7 @@ class _RewardScreenState extends State<RewardScreen> {
                       ),
                       child: Center(
                         child: TextWidget(
-                          text: 'No voucher redemptions yet.',
+                          text: 'No active claimed vouchers.',
                           fontSize: 14,
                           color: charcoalGray,
                           fontFamily: 'Regular',
@@ -200,37 +219,10 @@ class _RewardScreenState extends State<RewardScreen> {
                   return ListView.builder(
                     shrinkWrap: true,
                     physics: const NeverScrollableScrollPhysics(),
-                    itemCount: redemptions.length,
+                    itemCount: claimedVouchers.length,
                     itemBuilder: (context, index) {
-                      final data =
-                          redemptions[index].data() as Map<String, dynamic>;
-                      final voucherName = data['voucherName'] ?? 'Voucher';
-                      final voucherId =
-                          data['voucherId'] ?? data['voucherCode'] ?? '';
-                      final pointsSpent = data['pointsSpent'] ?? 0;
-                      final timestamp = data['timestamp'] as Timestamp?;
-                      final isUsed = data['isUsed'] ?? false;
-                      final status = data['status'] ?? 'active';
-                      final usedAt = data['usedAt'] as Timestamp?;
-                      final usedInOrder = data['usedInOrder'] ?? '';
-                      final expirationDate =
-                          data['expirationDate'] as Timestamp?;
-
-                      final dateStr = timestamp != null
-                          ? '${timestamp.toDate().day}/${timestamp.toDate().month}/${timestamp.toDate().year}'
-                          : 'Unknown date';
-                      final usedDateStr = usedAt != null
-                          ? '${usedAt.toDate().day}/${usedAt.toDate().month}/${usedAt.toDate().year}'
-                          : '';
-                      final expirationDateStr = expirationDate != null
-                          ? '${expirationDate.toDate().day}/${expirationDate.toDate().month}/${expirationDate.toDate().year}'
-                          : '';
-
-                      // Check if voucher is expired
-                      final isExpired = expirationDate != null &&
-                          DateTime.now().isAfter(expirationDate.toDate());
-                      final canUse =
-                          !isUsed && !isExpired && status == 'active';
+                      final voucher = claimedVouchers[index];
+                      // getUserClaimedVouchers already filters for isUsed=false and non-expired
 
                       return Container(
                         margin: const EdgeInsets.only(bottom: 8),
@@ -239,9 +231,7 @@ class _RewardScreenState extends State<RewardScreen> {
                           color: Colors.white,
                           borderRadius: BorderRadius.circular(12),
                           border: Border.all(
-                            color: isUsed || status == 'used' || isExpired
-                                ? festiveRed.withOpacity(0.3)
-                                : bayanihanBlue.withOpacity(0.3),
+                            color: bayanihanBlue.withOpacity(0.3),
                             width: 1.0,
                           ),
                         ),
@@ -251,20 +241,12 @@ class _RewardScreenState extends State<RewardScreen> {
                               width: 40,
                               height: 40,
                               decoration: BoxDecoration(
-                                color: isUsed || status == 'used' || isExpired
-                                    ? festiveRed.withOpacity(0.1)
-                                    : bayanihanBlue.withOpacity(0.1),
+                                color: bayanihanBlue.withOpacity(0.1),
                                 borderRadius: BorderRadius.circular(8),
                               ),
                               child: Icon(
-                                isUsed || status == 'used' || isExpired
-                                    ? isExpired
-                                        ? Icons.access_time
-                                        : Icons.check_circle
-                                    : Icons.card_giftcard,
-                                color: isUsed || status == 'used' || isExpired
-                                    ? festiveRed
-                                    : bayanihanBlue,
+                                Icons.card_giftcard,
+                                color: bayanihanBlue,
                                 size: 20,
                               ),
                             ),
@@ -276,7 +258,7 @@ class _RewardScreenState extends State<RewardScreen> {
                                   Row(
                                     children: [
                                       TextWidget(
-                                        text: voucherName,
+                                        text: voucher.name,
                                         fontSize: 14,
                                         color: textBlack,
                                         fontFamily: 'Bold',
@@ -286,92 +268,42 @@ class _RewardScreenState extends State<RewardScreen> {
                                         padding: const EdgeInsets.symmetric(
                                             horizontal: 6, vertical: 2),
                                         decoration: BoxDecoration(
-                                          color: isUsed ||
-                                                  status == 'used' ||
-                                                  isExpired
-                                              ? festiveRed.withOpacity(0.1)
-                                              : palmGreen.withOpacity(0.1),
+                                          color: palmGreen.withOpacity(0.1),
                                           borderRadius:
                                               BorderRadius.circular(10),
                                         ),
                                         child: TextWidget(
-                                          text: isUsed || status == 'used'
-                                              ? 'USED'
-                                              : isExpired
-                                                  ? 'EXPIRED'
-                                                  : 'ACTIVE',
+                                          text: 'ACTIVE',
                                           fontSize: 10,
-                                          color: isUsed ||
-                                                  status == 'used' ||
-                                                  isExpired
-                                              ? festiveRed
-                                              : palmGreen,
+                                          color: palmGreen,
                                           fontFamily: 'Bold',
                                         ),
                                       ),
                                     ],
                                   ),
                                   TextWidget(
-                                    text: 'Voucher Ticket',
+                                    text: 'Code: ${voucher.code}',
                                     fontSize: 12,
                                     color: bayanihanBlue,
                                     fontFamily: 'Bold',
                                   ),
                                   TextWidget(
                                     text:
-                                        '$pointsSpent points redeemed on $dateStr',
+                                        'Value: ₱${voucher.discountValue}',
                                     fontSize: 12,
                                     color: charcoalGray,
                                     fontFamily: 'Regular',
                                   ),
-                                  if (expirationDateStr.isNotEmpty)
+                                  if (voucher.expiryDate != null)
                                     TextWidget(
-                                      text: 'Expires on: $expirationDateStr',
+                                      text: 'Expires on: ${voucher.expiryDate!.day}/${voucher.expiryDate!.month}/${voucher.expiryDate!.year}',
                                       fontSize: 11,
-                                      color:
-                                          isExpired ? festiveRed : charcoalGray,
+                                      color: charcoalGray,
                                       fontFamily: 'Regular',
                                     ),
-                                  if (isUsed || status == 'used') ...[
-                                    TextWidget(
-                                      text: 'Used in order: $usedInOrder',
-                                      fontSize: 11,
-                                      color: festiveRed,
-                                      fontFamily: 'Bold',
-                                    ),
-                                    if (usedDateStr.isNotEmpty)
-                                      TextWidget(
-                                        text: 'Used on: $usedDateStr',
-                                        fontSize: 11,
-                                        color: charcoalGray,
-                                        fontFamily: 'Regular',
-                                      ),
-                                  ],
                                 ],
                               ),
                             ),
-                            if (canUse)
-                              TouchableWidget(
-                                onTap: () => _showUseVoucherConfirmation(
-                                  redemptions[index].id,
-                                  voucherName,
-                                  voucherId,
-                                ),
-                                child: Container(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 12, vertical: 6),
-                                  decoration: BoxDecoration(
-                                    color: bayanihanBlue,
-                                    borderRadius: BorderRadius.circular(16),
-                                  ),
-                                  child: TextWidget(
-                                    text: 'Use',
-                                    fontSize: 12,
-                                    color: Colors.white,
-                                    fontFamily: 'Bold',
-                                  ),
-                                ),
-                              ),
                           ],
                         ),
                       );
@@ -386,18 +318,17 @@ class _RewardScreenState extends State<RewardScreen> {
     );
   }
 
+
   Widget _buildVoucherCard({
-    required String description,
-    required int pointsCost,
-    required int value,
+    required Voucher voucher,
     required int userPoints,
     required String user,
   }) {
-    final canRedeem = userPoints >= pointsCost;
+    final canRedeem = userPoints >= voucher.costInPoints;
 
     return TouchableWidget(
       onTap: canRedeem
-          ? () => _redeemVoucher(pointsCost, description, value, user)
+          ? () => _redeemVoucher(voucher, user)
           : null,
       child: Container(
         padding: const EdgeInsets.all(16),
@@ -447,7 +378,7 @@ class _RewardScreenState extends State<RewardScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   TextWidget(
-                    text: description,
+                    text: voucher.name,
                     fontSize: 18,
                     color: canRedeem ? textBlack : ashGray,
                     fontFamily: 'Bold',
@@ -464,7 +395,7 @@ class _RewardScreenState extends State<RewardScreen> {
                   Row(
                     children: [
                       TextWidget(
-                        text: '₱$value',
+                        text: '₱${voucher.discountValue}',
                         fontSize: 16,
                         color: canRedeem ? bayanihanBlue : ashGray,
                         fontFamily: 'Bold',
@@ -477,7 +408,7 @@ class _RewardScreenState extends State<RewardScreen> {
                       ),
                       const SizedBox(width: 4),
                       TextWidget(
-                        text: '$pointsCost points',
+                        text: '${voucher.costInPoints} points',
                         fontSize: 14,
                         color: canRedeem ? Colors.amber : ashGray,
                         fontFamily: 'Bold',
@@ -509,51 +440,19 @@ class _RewardScreenState extends State<RewardScreen> {
   }
 
   Future<void> _redeemVoucher(
-      int pointsCost, String voucherName, int value, String user) async {
+      Voucher voucher, String user) async {
     try {
-      // Generate a unique voucher ID (not displayed to user)
-      final random = Random();
-      final voucherId =
-          'VOUCHER${random.nextInt(10000).toString().padLeft(4, '0')}';
+      // Use the service to claim the voucher (deducts points and adds to subcollection)
+      // Note: We need the userId (likely email or uid). The 'user' param passed here seems to be email in current usage.
+      // Ideally we should use UID. For now, assuming 'user' is the document ID for the user collection.
+      // If 'user' is email, we need to make sure VoucherService uses the correct doc ID.
+      // Based on StreamBuilder above: .doc(box.read('userData')?['email'] ?? box.read('user')?['email'])
+      // It seems the user DOC ID is the EMAIL. So 'user' param is correct.
 
-      // Set expiration date (30 days from now)
-      final expirationDate = DateTime.now().add(const Duration(days: 30));
-
-      // Deduct points from user account
-      final userDoc = _firestore.collection('users').doc(user);
-      await _firestore.runTransaction((transaction) async {
-        final snapshot = await transaction.get(userDoc);
-        final currentPoints = (snapshot.data()?['points'] ?? 0) as int;
-
-        if (currentPoints >= pointsCost) {
-          final newPoints = currentPoints - pointsCost;
-          transaction.update(userDoc, {
-            'points': newPoints,
-          });
-
-          // Also update local storage to keep points in sync
-          final localUserData = box.read('userData') ?? {};
-          localUserData['points'] = newPoints;
-          box.write('userData', localUserData);
-        } else {
-          throw Exception('Insufficient points');
-        }
-      });
-
-      // Add voucher redemption record
-      await _firestore.collection('voucher_redemptions').add({
-        'userId': user,
-        'voucherName': voucherName,
-        'voucherId': voucherId, // Internal ID, not shown to user
-        'voucherValue': value,
-        'pointsSpent': pointsCost,
-        'timestamp': FieldValue.serverTimestamp(),
-        'expirationDate': expirationDate,
-        'status': 'active',
-        'isUsed': false,
-      });
+      await _voucherService.claimVoucher(user, voucher);
 
       // Get user name for the confirmation screen
+      final userDoc = _firestore.collection('users').doc(user);
       final userSnapshot = await userDoc.get();
       final userData = userSnapshot.data() as Map<String, dynamic>?;
       final userName = userData?['name'] ?? 'User';
@@ -562,12 +461,12 @@ class _RewardScreenState extends State<RewardScreen> {
       Navigator.of(context).push(
         MaterialPageRoute(
           builder: (context) => VoucherConfirmationScreen(
-            voucherName: voucherName,
-            voucherCode:
-                voucherId, // Using voucherCode parameter but passing voucherId
-            voucherValue: value,
-            pointsSpent: pointsCost,
+            voucherName: voucher.name,
+            voucherCode: voucher.code,
+            voucherValue: voucher.discountValue.toInt(),
+            pointsSpent: voucher.costInPoints,
             userName: userName,
+            expirationDate: voucher.expiryDate,
           ),
         ),
       );

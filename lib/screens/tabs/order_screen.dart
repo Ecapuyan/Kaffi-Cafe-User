@@ -1024,6 +1024,9 @@ class _OrderScreenState extends State<OrderScreen> {
 
               // Clear cart and show success
               widget.clearCart();
+              
+              // Reset voucher state
+              _removeVoucher();
 
               // Navigate to confirmation screen
               _navigateToConfirmationScreen();
@@ -1057,6 +1060,9 @@ class _OrderScreenState extends State<OrderScreen> {
 
         // Clear cart and show success
         widget.clearCart();
+        
+        // Reset voucher state
+        _removeVoucher();
 
         // Navigate to confirmation screen
         _navigateToConfirmationScreen();
