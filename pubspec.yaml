@@ -51,6 +51,7 @@ dependencies:
   url_launcher:
   crypto: ^3.0.3
   auth0_flutter:
+  shared_preferences: ^2.5.3
 
 dev_dependencies:
   flutter_test:

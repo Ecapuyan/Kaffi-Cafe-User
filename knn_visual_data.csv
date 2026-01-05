@@ -1,26 +1,299 @@
-User/Product,Basque Burnt Cheesecake,Caramel Macchiato,Chicken Alfredo,Chocolate Mouse,Cloud Biscoff,Cloud Strawberry,Croissant,Egg & Bacon Sandwich,Egg & Bacono,Ham & Cheese,Kaffi Mocha,Okinawa,Pancake,S'mores,Signature Chocolate,Sweet Iced Americano,Vanilla Latte
-capuyan.e.bsinfotech@gmail.com,1,1,1,1,1,0,0,0,1,0,1,1,1,1,1,1,1
-defiler30@gmail.com,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1
-ecapuyan9@gmail.com,1,1,0,1,1,1,1,1,0,1,0,0,0,0,0,1,1
-capuyan.e.bsinfotech@gmail.com,1,1,1,1,1,0,0,0,1,0,1,1,1,1,1,1,1
-defiler30@gmail.com,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1
-ecapuyan9@gmail.com,1,1,0,1,1,1,1,1,0,1,0,0,0,0,0,1,1
+--- Raw User-Item Interaction Matrix ---
+This matrix shows which users (columns) purchased which items (rows). 1 means a purchase was made.
 
-Product/User,capuyan.e.bsinfotech@gmail.com,defiler30@gmail.com,ecapuyan9@gmail.com
-Basque Burnt Cheesecake,1,0,1
-Caramel Macchiato,1,0,1
-Chicken Alfredo,1,0,0
-Chocolate Mouse,1,0,1
-Cloud Biscoff,1,0,1
-Cloud Strawberry,0,0,1
-Croissant,0,0,1
-Egg & Bacon Sandwich,0,0,1
-Egg & Bacono,1,0,0
-Ham & Cheese,0,0,1
-Kaffi Mocha,1,0,0
-Okinawa,1,0,0
-Pancake,1,0,0
-S'mores,1,0,0
-Signature Chocolate,1,0,0
-Sweet Iced Americano,1,0,1
-Vanilla Latte,1,1,1
+item,anamaeyanco@gmail.com,bot1caligo@gmail.com,capuyan.e.bsinfotech@gmail.com,ceciliacapuyan1975@gmail.com,defiler30@gmail.com,ecapuyan9@gmail.com,eduardocapuyan1971@gmail.com,knightsed70@gmail.com,laflametwom@gmail.com,olanalans12345@gmail.com,umirakawa@gmail.com
+Affogato Caramel,0,0,0,1,1,0,1,1,0,0,1
+Basque Burnt Cheesecake,0,0,1,0,0,1,0,0,1,0,0
+Butter Toast,1,0,1,0,0,1,0,0,1,0,0
+Caramel Macchiato,0,0,1,0,0,1,0,0,0,0,0
+Chicken Alfredo,0,0,1,0,0,1,0,0,1,0,0
+Chocolate Mouse,0,0,1,0,0,1,0,0,0,1,0
+Cloud Biscoff,0,0,1,0,0,1,0,0,0,0,0
+Cloud Matcha,0,0,0,0,0,1,0,0,0,0,0
+Cloud Strawberry,0,0,0,0,0,1,0,0,0,0,0
+Croissant,0,0,0,0,0,1,0,1,0,0,0
+Egg & Bacon Sandwich,0,0,0,0,0,1,0,0,0,0,0
+Egg & Bacono,0,1,1,0,0,1,0,0,1,0,0
+Ham & Cheese,0,0,0,0,0,1,0,0,0,0,0
+Kaffi Mocha,0,0,1,0,0,0,0,0,0,0,0
+Matcha,0,0,0,0,0,1,0,0,0,0,0
+Okinawa,0,0,1,0,0,0,0,0,0,0,0
+Pancake,1,0,1,0,0,1,0,0,0,0,0
+S'mores,0,0,1,0,0,0,0,0,0,0,0
+Signature Chocolate,1,1,1,1,1,1,1,1,1,0,1
+Sweet Iced Americano,0,0,1,0,0,1,0,0,0,0,0
+Vanilla Latte,0,0,1,0,1,1,0,0,0,1,0
+Wintermelon,0,0,0,0,0,0,0,1,0,0,0
+
+
+--- Full Raw Item-to-Item Similarity Matrix (%) ---
+This matrix shows the co-purchase similarity between every pair of items.
+
+item,Affogato Caramel,Basque Burnt Cheesecake,Butter Toast,Caramel Macchiato,Chicken Alfredo,Chocolate Mouse,Cloud Biscoff,Cloud Matcha,Cloud Strawberry,Croissant,Egg & Bacon Sandwich,Egg & Bacono,Ham & Cheese,Kaffi Mocha,Matcha,Okinawa,Pancake,S'mores,Signature Chocolate,Sweet Iced Americano,Vanilla Latte,Wintermelon
+Affogato Caramel,100.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,31.62,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,70.71,0.00,22.36,44.72
+Basque Burnt Cheesecake,0.00,100.00,86.60,81.65,100.00,66.67,81.65,57.74,57.74,40.82,57.74,86.60,57.74,57.74,57.74,57.74,66.67,57.74,54.77,81.65,57.74,0.00
+Butter Toast,0.00,86.60,100.00,70.71,86.60,57.74,70.71,50.00,50.00,35.36,50.00,75.00,50.00,50.00,50.00,50.00,86.60,50.00,63.25,70.71,50.00,0.00
+Caramel Macchiato,0.00,81.65,70.71,100.00,81.65,81.65,100.00,70.71,70.71,50.00,70.71,70.71,70.71,70.71,70.71,70.71,81.65,70.71,44.72,100.00,70.71,0.00
+Chicken Alfredo,0.00,100.00,86.60,81.65,100.00,66.67,81.65,57.74,57.74,40.82,57.74,86.60,57.74,57.74,57.74,57.74,66.67,57.74,54.77,81.65,57.74,0.00
+Chocolate Mouse,0.00,66.67,57.74,81.65,66.67,100.00,81.65,57.74,57.74,40.82,57.74,57.74,57.74,57.74,57.74,57.74,66.67,57.74,36.51,81.65,86.60,0.00
+Cloud Biscoff,0.00,81.65,70.71,100.00,81.65,81.65,100.00,70.71,70.71,50.00,70.71,70.71,70.71,70.71,70.71,70.71,81.65,70.71,44.72,100.00,70.71,0.00
+Cloud Matcha,0.00,57.74,50.00,70.71,57.74,57.74,70.71,100.00,100.00,70.71,100.00,50.00,100.00,0.00,100.00,0.00,57.74,0.00,31.62,70.71,50.00,0.00
+Cloud Strawberry,0.00,57.74,50.00,70.71,57.74,57.74,70.71,100.00,100.00,70.71,100.00,50.00,100.00,0.00,100.00,0.00,57.74,0.00,31.62,70.71,50.00,0.00
+Croissant,31.62,40.82,35.36,50.00,40.82,40.82,50.00,70.71,70.71,100.00,70.71,35.36,70.71,0.00,70.71,0.00,40.82,0.00,44.72,50.00,35.36,70.71
+Egg & Bacon Sandwich,0.00,57.74,50.00,70.71,57.74,57.74,70.71,100.00,100.00,70.71,100.00,50.00,100.00,0.00,100.00,0.00,57.74,0.00,31.62,70.71,50.00,0.00
+Egg & Bacono,0.00,86.60,75.00,70.71,86.60,57.74,70.71,50.00,50.00,35.36,50.00,100.00,50.00,50.00,50.00,50.00,57.74,50.00,63.25,70.71,50.00,0.00
+Ham & Cheese,0.00,57.74,50.00,70.71,57.74,57.74,70.71,100.00,100.00,70.71,100.00,50.00,100.00,0.00,100.00,0.00,57.74,0.00,31.62,70.71,50.00,0.00
+Kaffi Mocha,0.00,57.74,50.00,70.71,57.74,57.74,70.71,0.00,0.00,0.00,0.00,50.00,0.00,100.00,0.00,100.00,57.74,100.00,31.62,70.71,50.00,0.00
+Matcha,0.00,57.74,50.00,70.71,57.74,57.74,70.71,100.00,100.00,70.71,100.00,50.00,100.00,0.00,100.00,0.00,57.74,0.00,31.62,70.71,50.00,0.00
+Okinawa,0.00,57.74,50.00,70.71,57.74,57.74,70.71,0.00,0.00,0.00,0.00,50.00,0.00,100.00,0.00,100.00,57.74,100.00,31.62,70.71,50.00,0.00
+Pancake,0.00,66.67,86.60,81.65,66.67,66.67,81.65,57.74,57.74,40.82,57.74,57.74,57.74,57.74,57.74,57.74,100.00,57.74,54.77,81.65,57.74,0.00
+S'mores,0.00,57.74,50.00,70.71,57.74,57.74,70.71,0.00,0.00,0.00,0.00,50.00,0.00,100.00,0.00,100.00,57.74,100.00,31.62,70.71,50.00,0.00
+Signature Chocolate,70.71,54.77,63.25,44.72,54.77,36.51,44.72,31.62,31.62,44.72,31.62,63.25,31.62,31.62,31.62,31.62,54.77,31.62,100.00,44.72,47.43,31.62
+Sweet Iced Americano,0.00,81.65,70.71,100.00,81.65,81.65,100.00,70.71,70.71,50.00,70.71,70.71,70.71,70.71,70.71,70.71,81.65,70.71,44.72,100.00,70.71,0.00
+Vanilla Latte,22.36,57.74,50.00,70.71,57.74,86.60,70.71,50.00,50.00,35.36,50.00,50.00,50.00,50.00,50.00,50.00,57.74,50.00,47.43,70.71,100.00,0.00
+Wintermelon,44.72,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,70.71,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,31.62,0.00,0.00,100.00
+
+
+--- Top Similar Items for Each Drink (Raw Scores) ---
+For each drink, this section lists all other items sorted by similarity score in descending order.
+
+"Caramel Macchiato" Similarities:
+Item,Similarity
+Sweet Iced Americano,1.0000
+Cloud Biscoff,1.0000
+Chicken Alfredo,0.8165
+Chocolate Mouse,0.8165
+Pancake,0.8165
+Basque Burnt Cheesecake,0.8165
+Ham & Cheese,0.7071
+S'mores,0.7071
+Okinawa,0.7071
+Matcha,0.7071
+Kaffi Mocha,0.7071
+Egg & Bacono,0.7071
+Vanilla Latte,0.7071
+Cloud Strawberry,0.7071
+Cloud Matcha,0.7071
+Butter Toast,0.7071
+Egg & Bacon Sandwich,0.7071
+Croissant,0.5000
+Signature Chocolate,0.4472
+Affogato Caramel,0.0000
+Wintermelon,0.0000
+
+"Cloud Biscoff" Similarities:
+Item,Similarity
+Sweet Iced Americano,1.0000
+Caramel Macchiato,1.0000
+Chicken Alfredo,0.8165
+Chocolate Mouse,0.8165
+Pancake,0.8165
+Basque Burnt Cheesecake,0.8165
+Ham & Cheese,0.7071
+S'mores,0.7071
+Okinawa,0.7071
+Matcha,0.7071
+Kaffi Mocha,0.7071
+Egg & Bacono,0.7071
+Vanilla Latte,0.7071
+Cloud Strawberry,0.7071
+Cloud Matcha,0.7071
+Butter Toast,0.7071
+Egg & Bacon Sandwich,0.7071
+Croissant,0.5000
+Signature Chocolate,0.4472
+Affogato Caramel,0.0000
+Wintermelon,0.0000
+
+"Cloud Matcha" Similarities:
+Item,Similarity
+Cloud Strawberry,1.0000
+Egg & Bacon Sandwich,1.0000
+Ham & Cheese,1.0000
+Matcha,1.0000
+Caramel Macchiato,0.7071
+Cloud Biscoff,0.7071
+Croissant,0.7071
+Sweet Iced Americano,0.7071
+Chicken Alfredo,0.5774
+Chocolate Mouse,0.5774
+Basque Burnt Cheesecake,0.5774
+Pancake,0.5774
+Egg & Bacono,0.5000
+Butter Toast,0.5000
+Vanilla Latte,0.5000
+Signature Chocolate,0.3162
+Affogato Caramel,0.0000
+S'mores,0.0000
+Okinawa,0.0000
+Kaffi Mocha,0.0000
+Wintermelon,0.0000
+
+"Cloud Strawberry" Similarities:
+Item,Similarity
+Cloud Matcha,1.0000
+Egg & Bacon Sandwich,1.0000
+Ham & Cheese,1.0000
+Matcha,1.0000
+Caramel Macchiato,0.7071
+Cloud Biscoff,0.7071
+Croissant,0.7071
+Sweet Iced Americano,0.7071
+Chicken Alfredo,0.5774
+Chocolate Mouse,0.5774
+Basque Burnt Cheesecake,0.5774
+Pancake,0.5774
+Egg & Bacono,0.5000
+Butter Toast,0.5000
+Vanilla Latte,0.5000
+Signature Chocolate,0.3162
+Affogato Caramel,0.0000
+S'mores,0.0000
+Okinawa,0.0000
+Kaffi Mocha,0.0000
+Wintermelon,0.0000
+
+"Kaffi Mocha" Similarities:
+Item,Similarity
+Okinawa,1.0000
+S'mores,1.0000
+Caramel Macchiato,0.7071
+Cloud Biscoff,0.7071
+Sweet Iced Americano,0.7071
+Chicken Alfredo,0.5774
+Chocolate Mouse,0.5774
+Basque Burnt Cheesecake,0.5774
+Pancake,0.5774
+Butter Toast,0.5000
+Vanilla Latte,0.5000
+Egg & Bacono,0.5000
+Signature Chocolate,0.3162
+Affogato Caramel,0.0000
+Egg & Bacon Sandwich,0.0000
+Matcha,0.0000
+Ham & Cheese,0.0000
+Croissant,0.0000
+Cloud Strawberry,0.0000
+Cloud Matcha,0.0000
+Wintermelon,0.0000
+
+"Matcha" Similarities:
+Item,Similarity
+Egg & Bacon Sandwich,1.0000
+Cloud Matcha,1.0000
+Cloud Strawberry,1.0000
+Ham & Cheese,1.0000
+Caramel Macchiato,0.7071
+Cloud Biscoff,0.7071
+Croissant,0.7071
+Sweet Iced Americano,0.7071
+Chicken Alfredo,0.5774
+Chocolate Mouse,0.5774
+Basque Burnt Cheesecake,0.5774
+Pancake,0.5774
+Butter Toast,0.5000
+Egg & Bacono,0.5000
+Vanilla Latte,0.5000
+Signature Chocolate,0.3162
+Affogato Caramel,0.0000
+S'mores,0.0000
+Okinawa,0.0000
+Kaffi Mocha,0.0000
+Wintermelon,0.0000
+
+"Okinawa" Similarities:
+Item,Similarity
+S'mores,1.0000
+Kaffi Mocha,1.0000
+Caramel Macchiato,0.7071
+Cloud Biscoff,0.7071
+Sweet Iced Americano,0.7071
+Pancake,0.5774
+Chicken Alfredo,0.5774
+Chocolate Mouse,0.5774
+Basque Burnt Cheesecake,0.5774
+Butter Toast,0.5000
+Vanilla Latte,0.5000
+Egg & Bacono,0.5000
+Signature Chocolate,0.3162
+Affogato Caramel,0.0000
+Egg & Bacon Sandwich,0.0000
+Matcha,0.0000
+Ham & Cheese,0.0000
+Croissant,0.0000
+Cloud Strawberry,0.0000
+Cloud Matcha,0.0000
+Wintermelon,0.0000
+
+"Signature Chocolate" Similarities:
+Item,Similarity
+Affogato Caramel,0.7071
+Butter Toast,0.6325
+Egg & Bacono,0.6325
+Chicken Alfredo,0.5477
+Basque Burnt Cheesecake,0.5477
+Pancake,0.5477
+Vanilla Latte,0.4743
+Caramel Macchiato,0.4472
+Cloud Biscoff,0.4472
+Sweet Iced Americano,0.4472
+Croissant,0.4472
+Chocolate Mouse,0.3651
+Okinawa,0.3162
+S'mores,0.3162
+Egg & Bacon Sandwich,0.3162
+Matcha,0.3162
+Kaffi Mocha,0.3162
+Ham & Cheese,0.3162
+Cloud Strawberry,0.3162
+Cloud Matcha,0.3162
+Wintermelon,0.3162
+
+"Sweet Iced Americano" Similarities:
+Item,Similarity
+Caramel Macchiato,1.0000
+Cloud Biscoff,1.0000
+Pancake,0.8165
+Chicken Alfredo,0.8165
+Chocolate Mouse,0.8165
+Basque Burnt Cheesecake,0.8165
+Egg & Bacono,0.7071
+Okinawa,0.7071
+Matcha,0.7071
+Kaffi Mocha,0.7071
+Ham & Cheese,0.7071
+Egg & Bacon Sandwich,0.7071
+Vanilla Latte,0.7071
+S'mores,0.7071
+Cloud Matcha,0.7071
+Butter Toast,0.7071
+Cloud Strawberry,0.7071
+Croissant,0.5000
+Signature Chocolate,0.4472
+Affogato Caramel,0.0000
+Wintermelon,0.0000
+
+"Vanilla Latte" Similarities:
+Item,Similarity
+Chocolate Mouse,0.8660
+Caramel Macchiato,0.7071
+Cloud Biscoff,0.7071
+Sweet Iced Americano,0.7071
+Pancake,0.5774
+Chicken Alfredo,0.5774
+Basque Burnt Cheesecake,0.5774
+Ham & Cheese,0.5000
+Okinawa,0.5000
+Matcha,0.5000
+Kaffi Mocha,0.5000
+Egg & Bacon Sandwich,0.5000
+Egg & Bacono,0.5000
+S'mores,0.5000
+Cloud Matcha,0.5000
+Butter Toast,0.5000
+Cloud Strawberry,0.5000
+Signature Chocolate,0.4743
+Croissant,0.3536
+Affogato Caramel,0.2236
+Wintermelon,0.0000
+

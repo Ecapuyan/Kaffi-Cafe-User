@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:kaffi_cafe/screens/chatsupport_screen.dart';
 import 'package:kaffi_cafe/screens/order_details_screen.dart';
+import 'package:kaffi_cafe/screens/terms_and_conditions_screen.dart';
 import 'package:kaffi_cafe/utils/colors.dart';
 import 'package:kaffi_cafe/widgets/button_widget.dart';
 import 'package:kaffi_cafe/widgets/divider_widget.dart';
@@ -1037,6 +1038,27 @@ class _AccountScreenState extends State<AccountScreen> {
                     },
                     color: bayanihanBlue,
                     textColor: plainWhite,
+                    fontSize: fontSize + 2,
+                    height: 50,
+                    radius: 12,
+                    width: screenWidth * 0.6,
+                  ),
+                ),
+                const SizedBox(height: 12), // Add space
+                Center(
+                  child: ButtonWidget(
+                    label: 'Terms and Conditions',
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              TermsAndConditionsScreen(), // Removed const
+                        ),
+                      );
+                    },
+                    color: cloudWhite, // Different color
+                    textColor: textBlack,
                     fontSize: fontSize + 2,
                     height: 50,
                     radius: 12,

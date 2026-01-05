@@ -11,7 +11,6 @@ class AuthWrapper extends StatelessWidget {
     return StreamBuilder<User?>(
       stream: FirebaseAuth.instance.authStateChanges(),
       builder: (context, snapshot) {
-        // Show loading indicator while checking auth state
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Scaffold(
             body: Center(
@@ -20,14 +19,14 @@ class AuthWrapper extends StatelessWidget {
           );
         }
 
-        // If user is logged in, show home screen
         if (snapshot.hasData && snapshot.data != null) {
           return const HomeScreen();
         }
 
-        // If user is not logged in, show login screen
         return const LoginScreen();
       },
     );
   }
-} 
+}
+
+ 

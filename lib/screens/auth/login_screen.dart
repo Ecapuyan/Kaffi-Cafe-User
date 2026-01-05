@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:kaffi_cafe/screens/home_screen.dart';
+import 'package:kaffi_cafe/screens/terms_and_conditions_screen.dart';
 import 'package:kaffi_cafe/screens/auth/signup_screen.dart';
 import 'package:kaffi_cafe/utils/colors.dart';
 import 'package:kaffi_cafe/widgets/button_widget.dart';
@@ -440,8 +441,16 @@ class _LoginScreenState extends State<LoginScreen> {
                         .get();
 
                     if (userDoc.exists) {
-                      // User exists, update last login and get current data
                       final userData = userDoc.data() as Map<String, dynamic>;
+                      // Your requested logic: If the user exists but is missing the field, add it.
+                      if (!userData.containsKey('terms_accepted')) {
+                        await _firestore
+                            .collection('users')
+                            .doc(credentials.user.toMap()['email'])
+                            .update({'terms_accepted': false});
+                      }
+
+                      // User exists, update last login and get current data
                       await _firestore
                           .collection('users')
                           .doc(credentials.user.toMap()['email'])
@@ -467,7 +476,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       });
                       box.write('userData', updatedUserData);
                     } else {
-                      // New user, create document with initial points
+                      // New user, create document with initial points and terms_accepted
                       await _firestore
                           .collection('users')
                           .doc(credentials.user.toMap()['email'])
@@ -479,6 +488,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         'points': 0,
                         'totalOrders': 0,
                         'lastLogin': FieldValue.serverTimestamp(),
+                        'terms_accepted': false,
                       });
 
                       // Store initial user data
